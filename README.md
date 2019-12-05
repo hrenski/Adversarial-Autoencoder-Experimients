@@ -32,19 +32,19 @@ The MNIST and CIFAR10 datasets were obtained on the fly as torchvision datasets.
 
 Here's some of my thoughts/notes on the experiments that I ran on MNIST. I tried three different prior distributions; here's a comparison of the three distributions colored by the label information.
 
-![image here]()
+![image here](images/mnist_distr.png)
 
 I also saved out the learned manifold for the 2D Gaussian and mixed (umbrella) Gaussian.
 
-![image here]()
+![image here](images/mnist_manifold.png)
 
 I did note that the reconstructions struggled a bit with a 2-dimensional latent space (see below). I know from previous tests (not included here) that altering the encoder/decoder only by increasing the dimension of the latent space drastically improves the reconstruction (which makes sense), but unforunately, it isn't as easy to visualize.
 
-![image here]()
+![image here](images/mnist_recon.png)
 
 It was interseting for me to note how the autoencoder tries to group not just numbers with the similar shapes together but also information beyond what is. By including the label information (in a semi-supervised scheme), we can guide how the autoencoder groups the data (for example along each mode of the mixed distribution) according to the information it finds relavent to the label. This allows the variation within the model to capture the information that the model does not associate with the label (the so-called style information) such as orientation, handwriting style, etc. Below is replication of one of the images in the paper in which we sample the mixed 2D (umbrella) Gaussian distribution along each mode (which corresponds to each row).
 
-![image here]()
+![image here](images/mnist_umbrella_sample.png)
 
 I did notice that the learned manifold (not shown here) tended to be a have a poorer quality (visually) when  using the labeled information as numbers which the autoencoder may not naturally group together are forced to be nearby. This makes me wonder if some care is needed when using the network architecture which feeds the labeled information to the discrimintor (unless you have some apriori information which can help guide you in deciding the prior distribution).
 
