@@ -57,13 +57,13 @@ I'm excited to implement the (semi) supervised network setup next to explore how
 
 For these experiment, I spent alot of time hand tuning the encoder/decoder in order to get a high fidelity reconstruction. While there are plenty of examples out there of such networks, copy/pasting them doesn't give a lot of intuition or insight as to how they are choosen. Once I had a decently working autoencoder, I incorporated the adversarial component. It took some experimentation to find the right balance of making the discriminator a strong enough learner to challenge the encoder while not overpowering the autoencoder portion of the network and preventing the encoder from learning the prior distribution. Below you can see examples of the reconstruction that the AAE gives on images it was traineed on.
 
-![image here]()
+![image here](images/lfw_recon.png)
 
 The latent space I used for the facial data is 400-dimensional, so I tested some different methods for understanding/exploring the latent space. The simpliest was to try applying the autoencoder to out of sample facial images and to try randomly sampling from the latent distribution. Below I show both of these images. As you can see, while strong facial features are present in both examples, a great deal of important imformation is not present. I believe this is a result of the small dataset that I trained on (about 5750 images), and I'm planning to do some more experimentation on this.
 
 Another way to evaluate the latent space is to explore around the encoding around the points that the trained data is mapped to. To do this, I took several images, encoded them, found the closest distinct neighbor (using KNN) and then extracted images along the line between these two points (using a cosine squared parameter). Finally, I animited these images into a collection of GIFs (see below).
 
-![image here]()
+![image here](images/lfw_gifs.gif)
 
 For images that have a similar neighbor the model seems to key in on the dominant facial features. There are also examples in which the facial features between the two images have some similarity, but it seems that the background or other "style" information is also playing a role in how the model compares the images. The influence of the background "style" is even more apparent on some of the examples in which the faces of the neighbors have very little similarity. It makes me wonder if label information can be used in the supervised autoencoder architecture to help guide the model on which components of the feature space are relevent for identifying the person/face and which are background; this is another experiment that I would like to explore. I also think that the size of the dataset the model trained on may also be coming into play here. The encoder may not have been informed of enough examples to create a well "populated" latent space. I did note though, that the latent space does seem to have inherited the smooth quality of the prior Gaussian distribution (at least nearby points mapped by the trained data) in that the GIFs show a smooth transition between their neighbors.
 
@@ -74,11 +74,11 @@ One last experiment that I'd like to make a note of is an attempt at a transfer 
 
 In case your not familar with the CIFAR10 dataset, it is an image classiification dataset consistenting of 10 classes, some of which are animals while others are different modes of transportation.
 
-![image here]()
+![image here](images/cifar10_data.png)
 
 To try the transfer classification, I took the training and testing images for CIFAR10 and encoded them using the trained weights from the facial data. I then trained a LighGBM model on the encoded training data and evaluated the classification performance on the encoded testing data. I also moderately tuned a CNN classifier on the training image data as a comparison. Below you can see a summary of my results.
 
-![image here]()
+![image here](images/cifar10_transfer.png)
 
 As you can see, the accuracy suffers, especially when compared to the specialist model; but the AUROC performs quite well. The representation of these objects within the facial data's latent space retained enough information to seperate the classes pretty distinctly which is pretty encouraging.
 
